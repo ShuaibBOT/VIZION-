@@ -9,7 +9,7 @@ width, height = cap.get(cv.CAP_PROP_FRAME_WIDTH ) ,cap.get(cv.CAP_PROP_FRAME_HEI
 #WebWidth, WebHeight = 800,480
 #cap.set(3,WebWidth)
 #cap.set(4,WebHeight)
-detector=HandDetector(detectionCon=0.8,maxHands=2)
+detector = HandDetector(detectionCon=0.8,maxHands=2)
 
 #Starts Camera
 while True:
