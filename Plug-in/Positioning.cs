@@ -4,246 +4,161 @@ using UnityEngine;
 
 public class Positioning : MonoBehaviour
 {
+    public UDPReceive udpReceive;
+    private GameObject handPoints;
     int NumOfHand;
-    string handType;
-    string rightHand;
+    public string handType; 
+    string handType2;
+    public int positionXL;
+    public int positionYL;
+    public string LHFingers;
+    string RHFingers;
+    string LHFingers2;
+    int positionXR;
+    int positionYR;
     string handClass;
-    int positionX;
-    int positionY;
-    bool num1_type;
-    bool num2_type;
+    //bool num1_type = false;
+    int LHX;
+    int LHY;
+    //bool num2_type = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        // Checking whether the user is using only one hand and that hand is the left hand.
-        if (NumOfHand == 1 && handType == "Left")
-        {
-            num1_type = true;
-        }
-        else
-        {
-            num1_type = false;
-        }
-
-        // Checking whether the user is using two hands
-        if(NumOfHand == 2)
-        {
-            num2_type = true;
-        }
-        else
-        {
-            num2_type = false;
-        }
-          
+        handPoints = GameObject.Find("Test");
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (num1_type == true)
+        string centerPoints = udpReceive.centerPoints;
+        centerPoints = centerPoints.Remove(0,1);
+        centerPoints = centerPoints.Remove(centerPoints.Length-1,1);
+        print(centerPoints);
+
+        string[] points = centerPoints.Split(',');
+        //positionX = int.Parse(points[0]); 
+        //positionY = int.Parse(points[1]);
+        //print(positionX); //xvalue of LH
+        //print(positionY); //y value of LH
+        
+        if (points.Length == 8)
         {
-            if (handClass == "Grab") //Positioning
+            handType = points[7].ToString();
+            print(handType);
+
+            LHFingers = points[2] + points[3] + points[4] + points[5] + points[6];
+            print(LHFingers);
+
+            positionXL = int.Parse(points[0]);
+            positionYL = int.Parse(points[1]);
+
+            LHX = positionXL; print(LHX);
+            LHY = positionYL; print(LHY);
+
+            if (LHFingers == " 0 0 0 0 0")
             {
-                //if arm moves to the right (x val dec)
-                for (int i = positionX; i < 650; i = positionX - 10)
-                {
-                    transform.position = Vector3.right;
-                }
-
-                //if arm moves to the left (x val inc)
-                for (int i = positionX; i < 650; i = positionX + 10)
-                {
-                    transform.position += Vector3.left;
-                }
-
-                //if arm moves to the up (y val dec)
-                for (int i = positionY; i < 480; i = positionY - 10)
-                {
-                    transform.position += Vector3.up;
-                }
-
-                //if arm moves to the down (y val inc)
-                for (int i = positionY; i < 480; i = positionY + 10)
-                {
-                    transform.position += Vector3.down;
-                }
-
+                Vector3 temp = new Vector3(0.01f, 0, 0);
+                handPoints.transform.position += temp;
+                print("Positioning");
             }
-            else if (handClass == "Rotate") //Rotation
+            else if(LHFingers == " 1 0 0 0 0")
             {
-                //if hand moves right (x val dec) (XYZ INC)
-                for (int i = positionX; i < 650; i = positionX - 10)
-                {
-                    transform.Rotate(1, 1, 1);
-                }
-                //if hand moves up (y val inc) (XYZ INC)
-                
-                for (int i = positionY; i < 650; i = positionY + 10)
-                {
-                    transform.Rotate(1, 1, 1);
-                }
-
-                //if hand moves left (x val inc) (XYZ DEC)
-                for (int i = positionX; i < 650; i = positionX + 10)
-                {
-                    transform.Rotate(-1, -1, -1);
-                }
-
-                //if hand moves down (y val dec) (XYZ DEC)
-                for (int i = positionY; i < 650; i = positionY - 10)
-                {
-                    transform.Rotate(-1, -1, -1);
-                }
+                Vector3 temp = new Vector3(0.1f, 0, 0); //rotate x axis
+                handPoints.transform.Rotate(temp);
+                print("Rotation");
+            }
+            else if(LHFingers == " 1 1 0 0 0")
+            {
+                Vector3 temp = new Vector3(0.01f, 0, 0); //scaling x axis
+                handPoints.transform.localScale += temp;
+                print("Scale");
             }
             else
             {
-                return;
+                print("Not Recognized");
             }
-
         }
-        else
+  
+        if (points.Length == 16)
         {
-            return;
-        }
+            handType2 = points[14].ToString();
+            print(handType2);
 
-        if(num2_type == true)
-        {
-            // if arm moves right (x val dec) or up (y val inc) obj moves on the axis speified by the user. INCREASE the value.
-            // if arm moves left (x val inc) or down (y val dec) obj moves on the axis speified by the user. DECREASE the value.
-            if (handType == "Left" && handClass == "Grab" && rightHand == "X axis")
+            RHFingers = points[4] + points[5] + points[6] + points[7] + points[8];
+            LHFingers2 = points[9] + points[10] + points[11] + points[12] + points[13];
+            print(RHFingers);
+
+            positionXR = int.Parse(points[0]); print(positionXR);
+            positionYR = int.Parse(points[1]); print(positionYR);
+
+            if (RHFingers == " 1 0 1 1 1" && LHFingers2 == " 0 0 0 0 0")
             {
-                for (int i = positionX; i < 650; i = positionX - 10) // X axis inc by 1
-                {
-                    transform.position += Vector3.right;
-                }
-                for (int i = positionY; i < 480; i = positionY + 10)  // X axis inc by 1
-                {
-                    transform.position += Vector3.right;
-                }
-
-                for (int i = positionX; i < 650; i = positionX + 10)  // X axis dec by 1
-                {
-                    transform.position += Vector3.left;
-                }
-                for (int i = positionY; i < 480; i = positionY - 10)  // X axis dec by 1
-                {
-                    transform.position += Vector3.left;
-                }
+                Vector3 temp = new Vector3(0, 0, 0.01f); //grab z axis
+                handPoints.transform.position += temp;
+                print("Positioning Z axis");
             }
-            else if(handType == "Left" && handClass == "Grab" && rightHand == "Y axis")
-            {
-                for (int i = positionX; i < 650; i = positionX - 10)  // Y axis inc by 1
-                {
-                    transform.position += Vector3.up;
-                }
-                for (int i = positionY; i < 480; i = positionY + 10) // Y axis inc by 1
-                {
-                    transform.position += Vector3.up;
-                }
 
-                for (int i = positionX; i < 650; i = positionX + 10) // Y axis dec by 1
-                {
-                    transform.position += Vector3.down;
-                }
-                for (int i = positionY; i < 480; i = positionY - 10) // Y axis dec by 1
-                {
-                    transform.position += Vector3.down;
-                }
+            else if (RHFingers == " 0 1 1 0 0" && LHFingers2 == " 0 0 0 0 0")
+            {
+                Vector3 temp = new Vector3(0, 0.01f, 0); //grab y axis
+                handPoints.transform.position += temp;
+                print("Positioning Y axis");
             }
-            else if(handType == "Left" && handClass == "Grab" && rightHand == "Z axis")
-            {
-                for (int i = positionX; i < 650; i = positionX - 10) // Z axis inc by 1
-                {
-                    transform.position += Vector3.forward;
-                }
-                for (int i = positionY; i < 480; i = positionY + 10) // Z axis inc by 1
-                {
-                    transform.position += Vector3.forward;
-                }
 
-                for (int i = positionX; i < 650; i = positionX + 10) // Z axis dec by 1
-                {
-                    transform.position += Vector3.back;
-                }
-                for (int i = positionY; i < 480; i = positionY - 10) // Z axis dec by 1
-                {
-                     transform.position += Vector3.back;
-                }
+            else if (RHFingers == " 1 0 0 0 1" && LHFingers2 == " 0 0 0 0 0")
+            {
+                Vector3 temp = new Vector3(0.01f, 0, 0); //grab x axis
+                handPoints.transform.position += temp;
+                print("Positioning X axis");
+            }
+
+            else if (RHFingers == " 1 0 1 1 1" && LHFingers2 == " 1 0 0 0 0")
+            {
+                Vector3 temp = new Vector3(0, 0, 0.1f); //rotate z axis
+                handPoints.transform.Rotate(temp);
+                print("Rotation Z axis");
+            }
+
+            else if (RHFingers == " 0 1 1 0 0" && LHFingers2 == " 1 0 0 0 0")
+            {
+                Vector3 temp = new Vector3(0, 0.1f, 0); //rotate y axis
+                handPoints.transform.Rotate(temp);
+                print("Rotation Y axis");
+            }
+
+            else if (RHFingers == " 1 0 0 0 1" && LHFingers2 == " 1 0 0 0 0")
+            {
+                Vector3 temp = new Vector3(0.1f, 0, 0); //rotate x axis
+                handPoints.transform.Rotate(temp);
+                print("Rotation X axis");
+            }
+
+            else if (RHFingers == " 1 0 1 1 1" && LHFingers2 == " 1 1 0 0 0")
+            {
+                Vector3 temp = new Vector3(0, 0, 0.01f); //scaling z axis
+                handPoints.transform.localScale += temp;
+                print("Scale Z axis");
+            }
+
+            else if (RHFingers == " 0 1 1 0 0" && LHFingers2 == " 1 1 0 0 0")
+            {
+                Vector3 temp = new Vector3(0, 0.01f, 0); //scaling y axis
+                handPoints.transform.localScale += temp;
+                print("Scale Y axis");
+            }
+
+            else if (RHFingers == " 1 0 0 0 1" && LHFingers2 == " 1 1 0 0 0")
+            {
+                Vector3 temp = new Vector3(0.01f, 0, 0); //scaling x axis
+                handPoints.transform.localScale += temp;
+                print("Scale X axis");
             }
             else
             {
-                return;
+                print("Not Recognized");
             }
-
-            //if hand moves Right(x value decreases)or UP(y value increases): object rotates based on the axis specified by the user.(increases rotation value)
-            //if hand moves left(x value increases) or DOwn(y value decrease): object rotates based on the axis specified by the user. (decreases rotation value)
-            if (handType == "Left" && handClass == "Rotate" && rightHand == "X axis") 
-            {
-                for (int i = positionX; i < 650; i = positionX - 10) // X axis inc by 1
-                {
-                    transform.Rotate(Vector3.right);
-                }
-                for (int i = positionY; i < 480; i = positionY + 10)  // X axis inc by 1
-                {
-                    transform.Rotate(Vector3.right);
-                }
-                for (int i = positionX; i < 650; i = positionX + 10)  // X axis dec by 1
-                {
-                    transform.Rotate(Vector3.left);
-                }
-                for (int i = positionY; i < 480; i = positionY - 10)  // X axis dec by 1
-                {
-                    transform.Rotate(Vector3.left);
-                }
-            }
-            else if (handType == "Left" && handClass == "Rotate" && rightHand == "Y axis")
-            {
-                for (int i = positionX; i < 650; i = positionX - 10)  // Y axis inc by 1
-                {
-                    transform.Rotate(Vector3.up);
-                }
-                for (int i = positionY; i < 480; i = positionY + 10) // Y axis inc by 1
-                {
-                    transform.Rotate(Vector3.up);
-                }
-                for (int i = positionX; i < 650; i = positionX + 10) // Y axis dec by 1
-                {
-                    transform.Rotate(Vector3.down);
-                }
-                for (int i = positionY; i < 480; i = positionY - 10) // Y axis dec by 1
-                {
-                    transform.Rotate(Vector3.down);
-                }
-            }
-            else if (handType == "Left" && handClass == "Rotate" && rightHand == "Z axis")
-            {
-                for (int i = positionX; i < 650; i = positionX - 10) // Z axis inc by 1
-                {
-                    transform.Rotate(Vector3.forward);
-                }
-                for (int i = positionY; i < 480; i = positionY + 10) // Z axis inc by 1
-                {
-                    transform.Rotate(Vector3.forward);
-                }
-                for (int i = positionX; i < 650; i = positionX + 10) // Z axis dec by 1
-                {
-                    transform.Rotate(Vector3.back);
-                }
-                for (int i = positionY; i < 480; i = positionY - 10) // Z axis dec by 1
-                {
-                    transform.Rotate(Vector3.back);
-                }
-            }
-            else
-            {
-                return;
-            }
+            
         }
-        else
-        {
-            return;
-        }
-
     }
 }
