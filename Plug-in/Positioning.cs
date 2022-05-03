@@ -25,14 +25,14 @@ public class Positioning : MonoBehaviour
         string centerPoints = udpReceive.centerPoints;
         centerPoints = centerPoints.Remove(0, 1);
         centerPoints = centerPoints.Remove(centerPoints.Length - 1, 1);
-        print(centerPoints);
+
 
         string[] points = centerPoints.Split(',');
 
         if (points.Length == 6)
         {
             RHFingers = points[0] + points[1] + points[2] + points[3] + points[4];
-            print(RHFingers);
+            print("Right :" + RHFingers);
 
             if (RHFingers == "1 1 1 1 1")
             {
@@ -73,8 +73,8 @@ public class Positioning : MonoBehaviour
             }
 
 
-            print(RHFingers2);
-            print(LHFingers);
+            print("Right : " + RHFingers2);
+            print("Left : " + LHFingers);
 
 
             if (RHFingers2 == " 1 1 1 1 1" && LHFingers == " 1 0 0 0 1")
