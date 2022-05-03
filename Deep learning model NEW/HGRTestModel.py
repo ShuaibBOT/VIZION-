@@ -5,9 +5,6 @@ import mediapipe as mp
 import tensorflow as tf
 from tensorflow.python.ops.numpy_ops import np_config
 np_config.enable_numpy_behavior()
-import PIL
-from PIL import Image
-import io
 
 
 
@@ -18,7 +15,7 @@ HERE = Path(__file__).parent
 #     model = pickle.load(f)
 # model = pickle.load(open('pickle_model.pkl', 'rb'))
 model = tf.keras.models.load_model('my_model')
-
+print(model)
 model.summary()
 classNames = ["Blank","Rotation","Scale","Translation","X Rotation","X Scale","X Translation","Y Rotation","Y Scale","Y Translation","Z Rotation","Z Scale","Z Translation"]
 cap = cv.VideoCapture(0)
