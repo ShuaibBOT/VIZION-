@@ -28,7 +28,6 @@ while True:
     hands, img = detector.findHands(img)
 
     #image preparation
-    img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
     img = cv.resize(img, (224, 224))
     cv.imshow("prepared img", img)
     cv.waitKey(1)
@@ -99,6 +98,6 @@ while True:
     else:
 
         handClass = 'Blank'
-        data = 0,0,0,0,0,0,handClass
+        data = "none","none","none","none","none",handClass
         centerPoints = data
         sock.sendto(str.encode(str(centerPoints)), serverAddressPort)

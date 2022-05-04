@@ -30,7 +30,7 @@ while True:
     hands, img = detector.findHands(img)
 
     #image preparation
-    img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+    # img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
     img = cv.resize(img, (224, 224))
     cv.imshow("prepared img", img)
     cv.waitKey(1)
