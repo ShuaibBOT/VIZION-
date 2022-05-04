@@ -1,2 +1,0 @@
-# VIZION-
-SDGP implementation work
